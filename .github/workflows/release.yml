@@ -1,0 +1,175 @@
+name: release
+
+# Builds the IP Vault Android SDK from the IP Vault source and publishes it into this
+# repository's Maven repository (maven/, served by GitHub Pages) with build provenance: a
+# Sigstore-signed SLSA attestation, made by this workflow on GitHub's runners, binding each AAR,
+# POM and Gradle module file to this run.
+#
+#   push a tag vX.Y.Z      build the source's tag vX.Y.Z, attest, commit it to maven/, and
+#                          publish a release holding its checksums and the attestation bundle
+#   workflow_dispatch      build a source ref only (a dry run); nothing is published
+#
+# The source repository is private until it opens: a read-only deploy key (the secret
+# SOURCE_DEPLOY_KEY) fetches it, and the commit and release name the commit built. The build is
+# quiet, so the public log carries no source text. The versions already in maven/ are copied into
+# the build first, so each module's maven-metadata.xml lists them all.
+#
+# Kept in the source as ci/public/ipvault-android/release.yml: edit it there, then copy it here.
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      source_ref:
+        description: The source branch, tag or commit to build (a dry run)
+        default: main
+
+# Actions are pinned to full commit SHAs, each release at least two weeks old when pinned.
+permissions:
+  contents: read
+
+env:
+  NDK_VERSION: 27.2.12479018
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    outputs:
+      commit: ${{ steps.read.outputs.commit }}
+      version: ${{ steps.read.outputs.version }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          path: site
+          persist-credentials: false
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: rev3rse-dev/ip-vault
+          ref: ${{ github.ref_type == 'tag' && github.ref_name || inputs.source_ref }}
+          ssh-key: ${{ secrets.SOURCE_DEPLOY_KEY }}
+          persist-credentials: false
+          path: src
+
+      - name: Read the commit and version, and check the version against the tag
+        id: read
+        shell: bash
+        working-directory: src
+        run: |
+          version="$(sed -n 's/^version = "\(.*\)"$/\1/p' Cargo.toml | head -n1)"
+          [[ -n "$version" ]] || { echo "::error::no workspace version in Cargo.toml"; exit 1; }
+          if [[ "$GITHUB_REF_TYPE" == tag && "$GITHUB_REF_NAME" != "v$version" ]]; then
+            echo "::error::tag $GITHUB_REF_NAME does not match the source version $version"
+            exit 1
+          fi
+          if [[ -d "../site/maven/dev/rev3rse/ipvault/ipvault/$version" ]]; then
+            echo "::error::$version is already published; a version is never replaced"
+            exit 1
+          fi
+          echo "commit=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "Source commit $(git rev-parse HEAD), version $version"
+
+      - name: Install the toolchain, the Android targets, the NDK and JDK 17
+        shell: bash
+        working-directory: src
+        run: |
+          rustup show active-toolchain > /dev/null || rustup toolchain install
+          rustup target add aarch64-linux-android armv7-linux-androideabi x86_64-linux-android
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null || true
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --install "ndk;$NDK_VERSION" > /dev/null
+          echo "ANDROID_NDK_HOME=$ANDROID_HOME/ndk/$NDK_VERSION" >> "$GITHUB_ENV"
+          echo "JAVA_HOME=$JAVA_HOME_17_X64" >> "$GITHUB_ENV"
+
+      # The pinned toolchain builds the source without a warning, and Gradle's quiet level hides
+      # the Kotlin compiler's, so the log carries no source text. build-rust.sh maps the runner's
+      # home to ~ in every path the native core embeds.
+      - name: Build
+        shell: bash
+        run: |
+          mkdir -p src/sdk/android/build
+          cp -R site/maven src/sdk/android/build/maven
+          cd src/sdk/android
+          ./gradlew --quiet --no-daemon publishSdk
+
+      - name: Check that the native core names no build path
+        shell: bash
+        run: |
+          version="${{ steps.read.outputs.version }}"
+          aar="src/sdk/android/build/maven/dev/rev3rse/ipvault/ipvault/$version/ipvault-$version.aar"
+          mkdir "$RUNNER_TEMP/aar" && unzip -q "$aar" -d "$RUNNER_TEMP/aar"
+          total=0
+          for so in "$RUNNER_TEMP"/aar/jni/*/libipvault_ffi.so; do
+            n="$(strings "$so" | grep -c "$HOME" || true)"
+            echo "$n strings name $HOME in ${so#"$RUNNER_TEMP"/aar/}"
+            total=$((total + n))
+          done
+          [[ "$total" == 0 ]]
+
+      - name: Collect the repository and its licence notices
+        shell: bash
+        run: |
+          mkdir out
+          cp -R src/sdk/android/build/maven out/maven
+          python3 -I src/ci/third_party_notices.py ipvault-ffi aarch64-linux-android out/THIRD-PARTY-NOTICES.txt
+          find out/maven -path "*/${{ steps.read.outputs.version }}/*" -type f | sort
+
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: sdk
+          path: out
+          if-no-files-found: error
+          retention-days: 14
+
+  publish:
+    needs: build
+    if: github.ref_type == 'tag'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
+    env:
+      VERSION: ${{ needs.build.outputs.version }}
+      COMMIT: ${{ needs.build.outputs.commit }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: sdk
+          path: ${{ runner.temp }}/out
+
+      - name: Add the version to maven/, with its checksums
+        shell: bash
+        run: |
+          rm -rf maven
+          cp -R "$RUNNER_TEMP/out/maven" maven
+          cp "$RUNNER_TEMP/out/THIRD-PARTY-NOTICES.txt" THIRD-PARTY-NOTICES.txt
+          find maven -path "*/$VERSION/*" -type f \( -name '*.aar' -o -name '*.pom' -o -name '*.module' -o -name '*.jar' \) \
+            | sort | while read -r f; do (cd "$(dirname "$f")" && sha256sum "$(basename "$f")"); done \
+            > "$RUNNER_TEMP/SHA256SUMS"
+          cat "$RUNNER_TEMP/SHA256SUMS"
+
+      - id: attest
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-checksums: ${{ runner.temp }}/SHA256SUMS
+
+      - name: Commit, and publish the release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BUNDLE: ${{ steps.attest.outputs.bundle-path }}
+        run: |
+          git add -A maven THIRD-PARTY-NOTICES.txt
+          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+            commit -q -m "SDK $VERSION, built from IP Vault source commit $COMMIT"
+          git push -q origin HEAD:main
+          cp "$BUNDLE" "$RUNNER_TEMP/ipvault-android-$VERSION.sigstore.json"
+          gh release create "$GITHUB_REF_NAME" "$RUNNER_TEMP/SHA256SUMS" "$RUNNER_TEMP/ipvault-android-$VERSION.sigstore.json" \
+            --repo "$GITHUB_REPOSITORY" --prerelease --title "IP Vault Android SDK $GITHUB_REF_NAME" \
+            --notes "The IP Vault Android SDK $VERSION, in this repository's Maven repository, built by its release workflow from IP Vault source commit $COMMIT.
+
+          Check a downloaded file's build provenance with \`gh attestation verify <file> --repo $GITHUB_REPOSITORY\` (or, with the attached bundle, \`--bundle ipvault-android-$VERSION.sigstore.json\`). Pre-1.0: interfaces may change."
