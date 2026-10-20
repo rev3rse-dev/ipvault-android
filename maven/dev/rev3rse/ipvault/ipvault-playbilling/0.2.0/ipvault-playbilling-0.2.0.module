@@ -1,0 +1,104 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "dev.rev3rse.ipvault",
+    "module": "ipvault-playbilling",
+    "version": "0.2.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.14.3"
+    }
+  },
+  "variants": [
+    {
+      "name": "releaseVariantReleaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "dev.rev3rse.ipvault",
+          "module": "ipvault",
+          "version": {
+            "requires": "0.2.0"
+          }
+        },
+        {
+          "group": "com.android.billingclient",
+          "module": "billing",
+          "version": {
+            "requires": "9.1.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.1.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "ipvault-playbilling-0.2.0.aar",
+          "url": "ipvault-playbilling-0.2.0.aar",
+          "size": 18286,
+          "sha512": "5bfdbcb3780a636dcc68f38e1e230f9aede4fcffa7c7dfde44c5cc559ac7e716ec2c1521358bb17b42f4ffc19e39db4e15a3502e91208819849b692db0b52762",
+          "sha256": "c263b8f4bb921b7042a817fe497ad864145369c9adf829153af56cd8a48c2750",
+          "sha1": "15e2fcc0dae61a0f057d8126f85059e192c10dd9",
+          "md5": "33750f5f555e92f96a2f3a0e0b97db50"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "dev.rev3rse.ipvault",
+          "module": "ipvault",
+          "version": {
+            "requires": "0.2.0"
+          }
+        },
+        {
+          "group": "com.android.billingclient",
+          "module": "billing",
+          "version": {
+            "requires": "9.1.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.1.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "ipvault-playbilling-0.2.0.aar",
+          "url": "ipvault-playbilling-0.2.0.aar",
+          "size": 18286,
+          "sha512": "5bfdbcb3780a636dcc68f38e1e230f9aede4fcffa7c7dfde44c5cc559ac7e716ec2c1521358bb17b42f4ffc19e39db4e15a3502e91208819849b692db0b52762",
+          "sha256": "c263b8f4bb921b7042a817fe497ad864145369c9adf829153af56cd8a48c2750",
+          "sha1": "15e2fcc0dae61a0f057d8126f85059e192c10dd9",
+          "md5": "33750f5f555e92f96a2f3a0e0b97db50"
+        }
+      ]
+    }
+  ]
+}
