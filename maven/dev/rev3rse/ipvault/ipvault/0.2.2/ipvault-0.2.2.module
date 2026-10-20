@@ -1,0 +1,96 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "dev.rev3rse.ipvault",
+    "module": "ipvault",
+    "version": "0.2.2",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.14.3"
+    }
+  },
+  "variants": [
+    {
+      "name": "releaseVariantReleaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.1.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "ipvault-0.2.2.aar",
+          "url": "ipvault-0.2.2.aar",
+          "size": 1573906,
+          "sha512": "3642b525661606492a1dccd89d48dfc8f8d9ef68991157b5355af804df56821384c3ea6616ed1e60474f3a78ce41eebbc30bfc48f48dfe057459461d5fcd7f2d",
+          "sha256": "06ef2103cd51a400d4c0e52fc5dd3e8b24e0ca2a4b3914b9b5e49748732e20a8",
+          "sha1": "8a5eff593b2ed63418a4f6cdd11cb395181998aa",
+          "md5": "78638a2840552a76af10f7252406839f"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "net.java.dev.jna",
+          "module": "jna",
+          "version": {
+            "requires": "5.19.1"
+          },
+          "excludes": [
+            {
+              "group": "*",
+              "module": "*"
+            }
+          ],
+          "thirdPartyCompatibility": {
+            "artifactSelector": {
+              "name": "jna",
+              "type": "aar",
+              "extension": "aar"
+            }
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.1.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "ipvault-0.2.2.aar",
+          "url": "ipvault-0.2.2.aar",
+          "size": 1573906,
+          "sha512": "3642b525661606492a1dccd89d48dfc8f8d9ef68991157b5355af804df56821384c3ea6616ed1e60474f3a78ce41eebbc30bfc48f48dfe057459461d5fcd7f2d",
+          "sha256": "06ef2103cd51a400d4c0e52fc5dd3e8b24e0ca2a4b3914b9b5e49748732e20a8",
+          "sha1": "8a5eff593b2ed63418a4f6cdd11cb395181998aa",
+          "md5": "78638a2840552a76af10f7252406839f"
+        }
+      ]
+    }
+  ]
+}

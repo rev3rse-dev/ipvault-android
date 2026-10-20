@@ -1,0 +1,97 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "dev.rev3rse.ipvault",
+    "module": "ipvault-playintegrity",
+    "version": "0.2.2",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.14.3"
+    }
+  },
+  "variants": [
+    {
+      "name": "releaseVariantReleaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "dev.rev3rse.ipvault",
+          "module": "ipvault",
+          "version": {
+            "requires": "0.2.2"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.1.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "ipvault-playintegrity-0.2.2.aar",
+          "url": "ipvault-playintegrity-0.2.2.aar",
+          "size": 4487,
+          "sha512": "239093d7f7f5fa066f307aab4c9dd0f26a93c2212ac6323c15dfcc8902bb69105e5b9a2c3289e53d5a42da3e8fc9a02f5b2d504d55a9d7bcb2c476746174d0e6",
+          "sha256": "629ce3017e4969408fa4910fa1eb1bd3a359a872e494e7cfc419276c0ecc6b3a",
+          "sha1": "dbce72dc12a5ddcb6799f977e2a93a7fb1ce9c10",
+          "md5": "e1f0a0afb38233a286448d56acb98292"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "com.google.android.play",
+          "module": "integrity",
+          "version": {
+            "requires": "1.6.0"
+          }
+        },
+        {
+          "group": "dev.rev3rse.ipvault",
+          "module": "ipvault",
+          "version": {
+            "requires": "0.2.2"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.1.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "ipvault-playintegrity-0.2.2.aar",
+          "url": "ipvault-playintegrity-0.2.2.aar",
+          "size": 4487,
+          "sha512": "239093d7f7f5fa066f307aab4c9dd0f26a93c2212ac6323c15dfcc8902bb69105e5b9a2c3289e53d5a42da3e8fc9a02f5b2d504d55a9d7bcb2c476746174d0e6",
+          "sha256": "629ce3017e4969408fa4910fa1eb1bd3a359a872e494e7cfc419276c0ecc6b3a",
+          "sha1": "dbce72dc12a5ddcb6799f977e2a93a7fb1ce9c10",
+          "md5": "e1f0a0afb38233a286448d56acb98292"
+        }
+      ]
+    }
+  ]
+}
