@@ -19,13 +19,13 @@ dependencyResolutionManagement {
 
 // app/build.gradle.kts
 dependencies {
-    implementation("dev.rev3rse.ipvault:ipvault:0.2.2")
+    implementation("dev.rev3rse.ipvault:ipvault:0.3.0")
     // The adapter for your runtime, if an asset is a model:
-    implementation("dev.rev3rse.ipvault:ipvault-onnxruntime:0.2.2")      // or ipvault-litert
+    implementation("dev.rev3rse.ipvault:ipvault-onnxruntime:0.3.0")      // or ipvault-litert
     // Optional: bind a Play Integrity verdict to each activation and renewal.
-    implementation("dev.rev3rse.ipvault:ipvault-playintegrity:0.2.2")
+    implementation("dev.rev3rse.ipvault:ipvault-playintegrity:0.3.0")
     // Optional: sell in Google Play, with every purchase checked by IP Vault.
-    implementation("dev.rev3rse.ipvault:ipvault-playbilling:0.2.2")
+    implementation("dev.rev3rse.ipvault:ipvault-playbilling:0.3.0")
 }
 
 android {
