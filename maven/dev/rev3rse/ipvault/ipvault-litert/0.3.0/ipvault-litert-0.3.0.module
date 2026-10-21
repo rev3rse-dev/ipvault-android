@@ -1,0 +1,97 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "dev.rev3rse.ipvault",
+    "module": "ipvault-litert",
+    "version": "0.3.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.14.3"
+    }
+  },
+  "variants": [
+    {
+      "name": "releaseVariantReleaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "dev.rev3rse.ipvault",
+          "module": "ipvault",
+          "version": {
+            "requires": "0.3.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.1.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "ipvault-litert-0.3.0.aar",
+          "url": "ipvault-litert-0.3.0.aar",
+          "size": 10218,
+          "sha512": "42c4256197258bde47d10f5b32c3f9960fefe08c115118a0f1661c12d6c3ba1ae5222c6bce6567a6264cdfa2fa69c1434c5d45735901a785cc5e7683164fe1be",
+          "sha256": "73844500f80911a053d785416148bbe54ba5d1e882c854f48e22b2c7d576e672",
+          "sha1": "8daac289b4faf009ef1526a4ec0a9dd5e259d501",
+          "md5": "0021b5109dbab6656fb6c159c69befab"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "com.google.ai.edge.litert",
+          "module": "litert",
+          "version": {
+            "requires": "1.4.2"
+          }
+        },
+        {
+          "group": "dev.rev3rse.ipvault",
+          "module": "ipvault",
+          "version": {
+            "requires": "0.3.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.1.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "ipvault-litert-0.3.0.aar",
+          "url": "ipvault-litert-0.3.0.aar",
+          "size": 10218,
+          "sha512": "42c4256197258bde47d10f5b32c3f9960fefe08c115118a0f1661c12d6c3ba1ae5222c6bce6567a6264cdfa2fa69c1434c5d45735901a785cc5e7683164fe1be",
+          "sha256": "73844500f80911a053d785416148bbe54ba5d1e882c854f48e22b2c7d576e672",
+          "sha1": "8daac289b4faf009ef1526a4ec0a9dd5e259d501",
+          "md5": "0021b5109dbab6656fb6c159c69befab"
+        }
+      ]
+    }
+  ]
+}
