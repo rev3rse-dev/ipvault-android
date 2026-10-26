@@ -19,13 +19,13 @@ dependencyResolutionManagement {
 
 // app/build.gradle.kts
 dependencies {
-    implementation("dev.rev3rse.ipvault:ipvault:0.3.0")
+    implementation("dev.rev3rse.ipvault:ipvault:0.3.3")
     // The adapter for your runtime, if an asset is a model:
-    implementation("dev.rev3rse.ipvault:ipvault-onnxruntime:0.3.0")      // or ipvault-litert
+    implementation("dev.rev3rse.ipvault:ipvault-onnxruntime:0.3.3")      // or ipvault-litert
     // Optional: bind a Play Integrity verdict to each activation and renewal.
-    implementation("dev.rev3rse.ipvault:ipvault-playintegrity:0.3.0")
+    implementation("dev.rev3rse.ipvault:ipvault-playintegrity:0.3.3")
     // Optional: sell in Google Play, with every purchase checked by IP Vault.
-    implementation("dev.rev3rse.ipvault:ipvault-playbilling:0.3.0")
+    implementation("dev.rev3rse.ipvault:ipvault-playbilling:0.3.3")
 }
 
 android {
@@ -45,6 +45,10 @@ android {
 
 Android 9 (API 28) or later. The hosted service activates genuine phones only: hardware key
 attestation and a locked bootloader. An emulator works against a development service.
+
+Version 0.3.3 handles Play app-signing certificate rotation using Android's verified signing
+history. Register the Play-delivered current certificate with IP Vault, then update the app in
+place; sealed assets do not need resealing for the certificate change.
 
 Your app's settings (tenant, service address, licence key) come from the developer console at
 [app.rev3rse.dev](https://app.rev3rse.dev); the
